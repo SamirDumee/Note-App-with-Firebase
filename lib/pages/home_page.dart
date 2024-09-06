@@ -17,22 +17,33 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Edit note"),
+        title: docId == null ? Text("Add new note") : Text("Edit note"),
         content: TextField(
           controller: textController,
         ),
         actions: [
           ElevatedButton(
-              onPressed: () {
-                if (docId == null) {
-                  firestoreService.addNotes(textController.text);
-                } else {
-                  firestoreService.updateNote(docId, textController.text);
-                }
-                textController.clear();
-                Navigator.pop(context);
-              },
-              child: const Text("Add"))
+            onPressed: () {
+              if (docId == null) {
+                firestoreService.addNotes(textController.text);
+              } else {
+                firestoreService.updateNote(docId, textController.text);
+              }
+              textController.clear();
+              Navigator.pop(context);
+            },
+            child: docId == null
+                ? const Text("Add")
+                : const Text(
+                    "Save",
+                  ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              "Cancel",
+            ),
+          )
         ],
       ),
     );
