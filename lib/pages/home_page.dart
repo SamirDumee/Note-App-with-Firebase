@@ -17,6 +17,7 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        title: Text("Edit note"),
         content: TextField(
           controller: textController,
         ),
@@ -31,9 +32,37 @@ class _HomePageState extends State<HomePage> {
                 textController.clear();
                 Navigator.pop(context);
               },
-              child: Text("Add"))
+              child: const Text("Add"))
         ],
       ),
+    );
+  }
+
+  void deleteNote(String docId) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Are you sure you want to delete?"),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                firestoreService.deleteNote(docId);
+                Navigator.pop(context);
+              },
+              child: Text(
+                "Delete",
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "Cancel",
+              ),
+            )
+          ],
+        );
+      },
     );
   }
 
@@ -41,11 +70,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Notes"),
+        title: const Text("Notes"),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: openAddNoteBox,
-        child: Icon(
+        child: const Icon(
           Icons.add,
         ),
       ),
@@ -70,11 +99,11 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       IconButton(
                         onPressed: () => openAddNoteBox(docId: docId),
-                        icon: Icon(Icons.edit),
+                        icon: const Icon(Icons.edit),
                       ),
                       IconButton(
-                        onPressed: () => firestoreService.deleteNote(docId),
-                        icon: Icon(Icons.delete),
+                        onPressed: () => deleteNote(docId),
+                        icon: const Icon(Icons.delete),
                       ),
                     ],
                   ),
@@ -82,7 +111,7 @@ class _HomePageState extends State<HomePage> {
               },
             );
           } else {
-            return Text("No notes at the moment");
+            return const Text("No notes at the moment");
           }
         },
       ),
